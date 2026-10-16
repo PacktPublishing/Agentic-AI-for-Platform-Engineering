@@ -1,0 +1,123 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: webapp-k8s-template
+  title: Web App with Kubernetes Deployment
+  description: Creates a web application with Kubernetes deployment, ArgoCD, and security metadata
+  tags:
+    - webapp
+    - kubernetes
+    - argocd
+spec:
+  owner: user:guest
+  type: service
+
+  parameters:
+    - title: Application Details
+      required:
+        - name
+        - description
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name (lowercase, hyphens only)
+          pattern: '^[a-z0-9-]+$'
+        description:
+          title: Description
+          type: string
+        owner:
+          title: Owner
+          type: string
+          default: user:guest
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: [Group, User]
+
+    - title: Kubernetes Configuration
+      properties:
+        namespace:
+          title: Namespace
+          type: string
+          default: default
+        replicas:
+          title: Replicas
+          type: integer
+          default: 2
+          minimum: 1
+          maximum: 10
+        minReplicas:
+          title: HPA Min Replicas
+          type: integer
+          default: 2
+        maxReplicas:
+          title: HPA Max Replicas
+          type: integer
+          default: 10
+
+    - title: Security Metadata
+      required:
+        - tenant
+        - environment
+      properties:
+        tenant:
+          title: Tenant
+          type: string
+          description: Tenant that owns this application.
+          pattern: '^[a-z0-9][a-z0-9-]{0,62}$'
+        environment:
+          title: Environment
+          type: string
+          default: dev
+          enum: [dev, staging, production]
+
+    - title: Repository Configuration
+      required:
+        - repoOwner
+        - repoName
+      properties:
+        repoOwner:
+          title: GitHub Owner
+          type: string
+          description: GitHub username or organization
+        repoName:
+          title: Repository Name
+          type: string
+          description: Repository name (must exist)
+          default: backstage-components
+
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        targetPath: ./${{ parameters.name }}
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          namespace: ${{ parameters.namespace }}
+          tenant: ${{ parameters.tenant }}
+          environment: ${{ parameters.environment }}
+          replicas: ${{ parameters.replicas }}
+          minReplicas: ${{ parameters.minReplicas }}
+          maxReplicas: ${{ parameters.maxReplicas }}
+          repoOwner: ${{ parameters.repoOwner }}
+          repoName: ${{ parameters.repoName }}
+
+    - id: publish-pr
+      name: Create Pull Request
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?owner=${{ parameters.repoOwner }}&repo=${{ parameters.repoName }}
+        title: 'feat: Add ${{ parameters.name }}'
+        branchName: feature/add-${{ parameters.name }}
+        description: |
+          Adds ${{ parameters.name }} with K8s manifests and ArgoCD deployment.
+
+  output:
+    links:
+      - title: Pull Request
+        url: ${{ steps['publish-pr'].output.remoteUrl }}

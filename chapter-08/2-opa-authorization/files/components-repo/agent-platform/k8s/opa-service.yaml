@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: opa-policy-engine
+  namespace: agent-platform
+spec:
+  selector:
+    app: opa-policy-engine
+  ports:
+  - port: 8181
+    targetPort: 8181

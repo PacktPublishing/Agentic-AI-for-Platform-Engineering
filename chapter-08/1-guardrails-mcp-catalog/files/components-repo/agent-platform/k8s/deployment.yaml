@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-runtime
+  namespace: agent-platform
+  labels:
+    app: agent-runtime
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: agent-runtime
+  template:
+    metadata:
+      labels:
+        app: agent-runtime
+    spec:
+      serviceAccountName: agent-runtime
+      containers:
+      - name: agent
+        image: agent-runtime:0.8.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: LLM_PROVIDER
+          value: bedrock
+        - name: BEDROCK_MODEL_ID
+          value: us.anthropic.claude-sonnet-4-5-20250929-v1:0
+        - name: BACKSTAGE_URL
+          value: http://host.docker.internal:7007
+        - name: IDENTITY_DIR
+          value: /state/identity
+        - name: SESSION_DIR
+          value: /state/sessions
+        - name: MEMORY_FILE
+          value: /state/memory/MEMORY.md
+        - name: SKILLS_DIR
+          value: /state/skills
+        - name: AUDIT_LOG
+          value: /state/audit/AUDIT.log
+        - name: AGENT_ID
+          value: platform-ops
+        - name: SECURITY_MODE
+          value: guardrail
+        - name: OPA_ENABLED
+          value: 'false'
+        - name: TENANT_ISOLATION
+          value: 'false'
+        - name: MCP_GITOPS_URL
+          value: http://gitops-mcp.agent-platform.svc.cluster.local:8080
+        - name: GITHUB_REPO_OWNER
+          value: YOUR_USERNAME
+        - name: GITHUB_REPO_NAME
+          value: backstage-components
+        - name: GITHUB_DEFAULT_BRANCH
+          value: main
+        - name: GITHUB_PERSONAL_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: gitops-mcp-github
+              key: GITHUB_PERSONAL_ACCESS_TOKEN
+        - name: LANGFUSE_HOST
+          value: http://langfuse.langfuse.svc.cluster.local:3000
+        - name: MCP_CLUSTER_URL
+          value: http://cluster-mcp.agent-platform.svc.cluster.local:8080
+        envFrom:
+        - secretRef:
+            name: agent-llm-credentials
+        - secretRef:
+            name: agent-langfuse-keys
+            optional: true
+        - secretRef:
+            name: agent-backstage-read
+        volumeMounts:
+        - name: identity
+          mountPath: /state/identity
+          readOnly: true
+        - name: skills-fix-image-tag
+          mountPath: /state/skills/fix-image-tag
+          readOnly: true
+        - name: memory
+          mountPath: /state/memory
+        - name: audit
+          mountPath: /state/audit
+        - name: sessions
+          mountPath: /state/sessions
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          periodSeconds: 5
+          failureThreshold: 60
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+      volumes:
+      - name: identity
+        configMap:
+          name: agent-identity
+      - name: skills-fix-image-tag
+        configMap:
+          name: agent-skills-fix-image-tag
+      - name: memory
+        persistentVolumeClaim:
+          claimName: agent-memory
+      - name: audit
+        persistentVolumeClaim:
+          claimName: agent-audit
+      - name: sessions
+        emptyDir: {}
+      automountServiceAccountToken: false

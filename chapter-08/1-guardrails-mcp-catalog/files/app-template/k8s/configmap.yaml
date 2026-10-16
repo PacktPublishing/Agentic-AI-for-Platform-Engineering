@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: APP_NAME-html
+  namespace: APP_NAMESPACE
+  labels:
+    app: APP_NAME
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>APP_NAME</title>
+      <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: 0 auto; }
+        h1 { color: #333; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>APP_NAME</h1>
+        <p>APP_DESCRIPTION</p>
+        <p><strong>Namespace:</strong> APP_NAMESPACE</p>
+        <p><strong>Owner:</strong> APP_OWNER</p>
+      </div>
+    </body>
+    </html>

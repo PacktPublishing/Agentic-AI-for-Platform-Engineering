@@ -1,0 +1,172 @@
+revision: chapter08-v6
+role_permissions:
+  viewer:
+    get_file_contents:
+    - dev
+    - staging
+    - production
+    create_or_update_file: []
+    create_branch: []
+    create_pull_request: []
+    resources_get:
+    - dev
+    - staging
+    - production
+    resources_list:
+    - dev
+    - staging
+    - production
+    pods_list_in_namespace:
+    - dev
+    - staging
+    - production
+    pods_get:
+    - dev
+    - staging
+    - production
+    pods_log:
+    - dev
+    - staging
+    - production
+    events_list:
+    - dev
+    - staging
+    - production
+    diagnose_application:
+    - dev
+    - staging
+    - production
+    review_configuration:
+    - dev
+    - staging
+    - production
+    propose_change: []
+  developer:
+    get_file_contents:
+    - dev
+    - staging
+    create_or_update_file:
+    - dev
+    create_branch:
+    - dev
+    create_pull_request:
+    - dev
+    resources_get:
+    - dev
+    - staging
+    resources_list:
+    - dev
+    - staging
+    pods_list_in_namespace:
+    - dev
+    - staging
+    pods_get:
+    - dev
+    - staging
+    pods_log:
+    - dev
+    - staging
+    events_list:
+    - dev
+    - staging
+    diagnose_application:
+    - dev
+    - staging
+    review_configuration:
+    - dev
+    - staging
+    propose_change:
+    - dev
+  platform-engineer:
+    get_file_contents:
+    - dev
+    - staging
+    create_or_update_file:
+    - dev
+    - staging
+    create_branch:
+    - dev
+    - staging
+    create_pull_request:
+    - dev
+    - staging
+    resources_get:
+    - dev
+    - staging
+    resources_list:
+    - dev
+    - staging
+    pods_list_in_namespace:
+    - dev
+    - staging
+    pods_get:
+    - dev
+    - staging
+    pods_log:
+    - dev
+    - staging
+    events_list:
+    - dev
+    - staging
+    diagnose_application:
+    - dev
+    - staging
+    review_configuration:
+    - dev
+    - staging
+    propose_change:
+    - dev
+    - staging
+  release-engineer:
+    get_file_contents:
+    - dev
+    - staging
+    - production
+    create_or_update_file:
+    - dev
+    - staging
+    - production
+    create_branch:
+    - dev
+    - staging
+    - production
+    create_pull_request:
+    - dev
+    - staging
+    - production
+    resources_get:
+    - dev
+    - staging
+    - production
+    resources_list:
+    - dev
+    - staging
+    - production
+    pods_list_in_namespace:
+    - dev
+    - staging
+    - production
+    pods_get:
+    - dev
+    - staging
+    - production
+    pods_log:
+    - dev
+    - staging
+    - production
+    events_list:
+    - dev
+    - staging
+    - production
+    diagnose_application:
+    - dev
+    - staging
+    - production
+    review_configuration:
+    - dev
+    - staging
+    - production
+    propose_change:
+    - dev
+    - staging
+    - production

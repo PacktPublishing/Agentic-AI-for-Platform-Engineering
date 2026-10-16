@@ -1,0 +1,132 @@
+# Platform-managed catalog entities. Review changes before merging.
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: kubernetes-mcp
+  description: Approved kubernetes MCP connection. Changes require platform review.
+spec:
+  type: mcp-server
+  owner: group:default/platform
+  endpoint: http://cluster-mcp.agent-platform.svc.cluster.local:8080
+  transport: streamable-http
+  image: quay.io/containers/kubernetes_mcp_server:v0.0.66
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: github-mcp
+  description: Approved github MCP connection. Changes require platform review.
+spec:
+  type: mcp-server
+  owner: group:default/platform
+  endpoint: http://gitops-mcp.agent-platform.svc.cluster.local:8080
+  transport: streamable-http
+  image: ghcr.io/github/github-mcp-server:v1.12.1
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: coordinator-guardrails
+  description: Mandatory guardrails for the coordinator agent. Enforced by the runtime.
+spec:
+  type: guardrail-profile
+  owner: group:default/platform
+  revision: chapter08-v6
+  agent: coordinator
+  allowedTools:
+  - diagnose_application
+  - review_configuration
+  - propose_change
+  - save_to_memory
+  - search_catalog
+  - search_documentation
+  mcpServers: []
+  rules:
+    applicationScope: dedicated-namespace
+    pullRequestsOnly: true
+    readOnlyCluster: true
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: diagnostics-guardrails
+  description: Mandatory guardrails for the diagnostics agent. Enforced by the runtime.
+spec:
+  type: guardrail-profile
+  owner: group:default/platform
+  revision: chapter08-v6
+  agent: diagnostics
+  allowedTools:
+  - resources_get
+  - resources_list
+  - pods_list_in_namespace
+  - pods_get
+  - pods_log
+  - events_list
+  mcpServers:
+  - resource:default/kubernetes-mcp
+  rules:
+    applicationScope: dedicated-namespace
+    pullRequestsOnly: true
+    readOnlyCluster: true
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: gitops-guardrails
+  description: Mandatory guardrails for the gitops agent. Enforced by the runtime.
+spec:
+  type: guardrail-profile
+  owner: group:default/platform
+  revision: chapter08-v6
+  agent: gitops
+  allowedTools:
+  - get_file_contents
+  - create_branch
+  - create_or_update_file
+  - create_pull_request
+  - consult_skill
+  mcpServers:
+  - resource:default/github-mcp
+  rules:
+    applicationScope: dedicated-namespace
+    pullRequestsOnly: true
+    readOnlyCluster: true
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: coordinator-agent
+  description: Coordinator agent and its mandatory guardrail profile.
+spec:
+  type: ai-agent
+  owner: group:default/platform
+  guardrailProfile: resource:default/coordinator-guardrails
+  dependsOn:
+  - resource:default/coordinator-guardrails
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: diagnostics-agent
+  description: Diagnostics agent and its mandatory guardrail profile.
+spec:
+  type: ai-agent
+  owner: group:default/platform
+  guardrailProfile: resource:default/diagnostics-guardrails
+  dependsOn:
+  - resource:default/diagnostics-guardrails
+  - resource:default/kubernetes-mcp
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: gitops-agent
+  description: Gitops agent and its mandatory guardrail profile.
+spec:
+  type: ai-agent
+  owner: group:default/platform
+  guardrailProfile: resource:default/gitops-guardrails
+  dependsOn:
+  - resource:default/gitops-guardrails
+  - resource:default/github-mcp

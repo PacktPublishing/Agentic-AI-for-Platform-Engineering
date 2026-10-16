@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name | dump }}
+  description: ${{ values.description | dump }}
+  annotations:
+    backstage.io/kubernetes-id: ${{ values.name | dump }}
+    backstage.io/kubernetes-namespace: ${{ values.namespace | dump }}
+    github.com/project-slug: ${{ (values.repoOwner + "/" + values.repoName) | dump }}
+    platform.example.com/manifest-path: ${{ (values.name + "/k8s/deployment.yaml") | dump }}
+    platform.example.com/workload-name: ${{ values.name | dump }}
+    platform.example.com/environment: ${{ values.environment | dump }}
+    platform.example.com/tenant: ${{ values.tenant | dump }}
+    platform.example.com/namespace-scope: dedicated
+spec:
+  type: website
+  lifecycle: experimental
+  owner: ${{ values.owner | dump }}

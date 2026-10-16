@@ -1,5 +1,8 @@
 # Chapter 7: Operational Agents and Collaboration
 
+> [!WARNING]
+> **For learning and experimentation only.** These labs are reference implementations and are not production-ready baselines. Do not deploy them to production without an independent security review, infrastructure hardening, and testing appropriate to your workloads and compliance requirements. The credentials, IAM permissions, network boundaries, policies, and deployment configurations are intentionally simplified for local exercises.
+
 Build a separate agent runtime, add collaborating specialists, then connect them to the existing Chapter 5 Backstage Chat Assistant in Lab 4. The chat UI and route stay the same. Three agents diagnose application problems and propose repairs through GitOps:
 
 - **Platform Coordinator** understands the request, delegates work, and explains the result.

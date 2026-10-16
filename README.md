@@ -1,6 +1,9 @@
 # AI-Driven Platform Engineering — Code
 
-Companion code for the book *AI-Driven Platform Engineering*. Every chapter's labs run locally on **one shared kind cluster** you create once, on your own machine — no cloud account required (Amazon EKS works too if you prefer).
+Companion code for the book *AI-Driven Platform Engineering*. The labs build a local platform on one shared [kind](https://kind.sigs.k8s.io/) cluster, then extend it with organizational context, Backstage, collaborating agents, and enforceable security. Amazon EKS can replace kind; model-backed labs require credentials for a documented LLM provider.
+
+> [!WARNING]
+> **For learning and experimentation only.** These labs are reference implementations and are not production-ready baselines. Do not deploy them to production without an independent security review, infrastructure hardening, and testing appropriate to your workloads and compliance requirements. The credentials, IAM permissions, network boundaries, policies, and deployment configurations are intentionally simplified for local exercises.
 
 ## Start here
 
@@ -12,19 +15,22 @@ cd 00-cluster-setup
 
 See [`00-cluster-setup/README.md`](./00-cluster-setup/README.md) for details, EKS notes, and teardown.
 
-## Layout
+## Learning path
 
-| Path | Chapter | What it builds |
-|---|---|---|
-| [`00-cluster-setup/`](./00-cluster-setup/) | — | The shared local cluster every chapter runs on (kind + Metrics Server + ArgoCD) |
-| [`chapter-04/`](./chapter-04/) | 4 — Driving Platform Intelligence with Organizational Knowledge | A local RAG pipeline (Postgres + pgvector) and an MCP server over platform knowledge — RAG vs MCP, hands-on |
-| [`chapter-05/`](./chapter-05/) | 5 — Building an AI-Powered Backstage Platform | Backstage + GitOps (ArgoCD), an AI chat assistant, catalog awareness, and Kubernetes actions |
-| [`chapter-07/`](./chapter-07/) | 7 — Operational Agents in Production | A production-grade agent that proposes changes through the same GitOps flow |
-| [`chapter-08/`](./chapter-08/) | 8 — Security in Practice | OPA policy enforcement, signed identity propagation, tenant isolation, and security evidence |
-| [`chapter-09/`](./chapter-09/) | 9 — Future Directions | A **living memory graph**: an MCP server over a curated, PR-extensible knowledge graph seeded with the whole book — connect a local agent and extend it over time |
+| Path | What it builds |
+|---|---|
+| [`00-cluster-setup/`](./00-cluster-setup/) | The shared kind cluster, Metrics Server, and ArgoCD. |
+| [`chapter-04/`](./chapter-04/) | Organizational knowledge through a local RAG pipeline and an MCP server for live platform data. |
+| [`chapter-05/`](./chapter-05/) | Backstage, software templates, GitOps delivery, an AI assistant, catalog context, and Kubernetes actions. |
+| [`chapter-07/`](./chapter-07/) | A coordinator with diagnostics and GitOps specialists, official Kubernetes and GitHub MCP servers, Backstage integration, and observability. |
+| [`chapter-08/`](./chapter-08/) | Mandatory guardrails, an approved MCP catalog, OPA authorization, Keycloak identity in Backstage, and tenant isolation. |
+| [`chapter-09/`](./chapter-09/) | A PR-extensible memory graph for exploring future platform-engineering knowledge. |
+
+Chapter 4 can be explored independently. Chapters 5, 7, and 8 are cumulative: Chapter 5 establishes Backstage and GitOps, Chapter 7 adds operational agents, and Chapter 8 secures their capabilities and user access.
 
 ## Conventions across chapters
 
-- **Cluster:** the single kind cluster from `00-cluster-setup` (offline, reproducible).
-- **LLM provider:** Amazon Bedrock with Claude by default; Anthropic API direct documented as a fallback for readers without AWS access.
-- **Deploy channel (Ch. 5 and 7):** GitOps only — PR → merge → ArgoCD. You don't `kubectl apply` application workloads by hand.
+- **Cluster:** reuse the `agentic-platform` cluster instead of creating one per chapter.
+- **LLM provider:** Amazon Bedrock is shown by default; Anthropic API access is documented as an alternative.
+- **GitOps:** application changes follow branch → pull request → human review and merge → ArgoCD.
+- **Safety:** cluster diagnostics are read-only, credentials come from local environment variables or Kubernetes Secrets, and Chapter 8 evaluates identity and policy before tool execution.

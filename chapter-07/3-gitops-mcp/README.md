@@ -79,12 +79,12 @@ The coordinator's Backstage connection is configured in Lab 4. The GitOps specia
 ```bash
 : "${KIND_PLATFORM:?Set KIND_PLATFORM as shown in Lab 1}"
 docker pull --platform "$KIND_PLATFORM" ghcr.io/github/github-mcp-server:v1.12.1
-docker build --platform "$KIND_PLATFORM" -t agent-runtime:0.7.4 \
+docker build --platform "$KIND_PLATFORM" -t agent-runtime:0.7.3 \
   "$BOOK_REPO/chapter-07/3-gitops-mcp/files/agent/"
 docker image save --platform "$KIND_PLATFORM" -o /tmp/github-mcp.tar \
   ghcr.io/github/github-mcp-server:v1.12.1
 kind load image-archive /tmp/github-mcp.tar --name agentic-platform
-docker image save --platform "$KIND_PLATFORM" -o /tmp/agent-runtime.tar agent-runtime:0.7.4
+docker image save --platform "$KIND_PLATFORM" -o /tmp/agent-runtime.tar agent-runtime:0.7.3
 kind load image-archive /tmp/agent-runtime.tar --name agentic-platform
 rm /tmp/github-mcp.tar /tmp/agent-runtime.tar
 ```

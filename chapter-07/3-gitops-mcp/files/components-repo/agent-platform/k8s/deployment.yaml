@@ -20,7 +20,7 @@ spec:
       serviceAccountName: agent-runtime
       containers:
       - name: agent
-        image: agent-runtime:0.7.4
+        image: agent-runtime:0.7.3
         imagePullPolicy: IfNotPresent
         ports:
         - name: http

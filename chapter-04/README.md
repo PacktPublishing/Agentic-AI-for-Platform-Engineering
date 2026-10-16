@@ -1,5 +1,8 @@
 # Chapter 04: Driving Platform Intelligence with Organizational Knowledge
 
+> [!WARNING]
+> **For learning and experimentation only.** These labs are reference implementations and are not production-ready baselines. Do not deploy them to production without an independent security review, infrastructure hardening, and testing appropriate to your workloads and compliance requirements. The credentials, IAM permissions, network boundaries, policies, and deployment configurations are intentionally simplified for local exercises.
+
 Chapter 4 is about a single idea: a model is only as good as the **context** you give it. This chapter turns that idea into running code. You'll take a pile of organizational knowledge — runbooks, postmortems, blueprints — and make it *consumable by AI* two different ways, then see exactly where each one wins.
 
 Everything here runs on the same local **kind** cluster from [`00-cluster-setup`](../00-cluster-setup/README.md). No managed cloud services, no Kinesis, no OpenSearch — you build the whole thing on your laptop and watch it work.

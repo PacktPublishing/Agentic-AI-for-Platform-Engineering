@@ -1,0 +1,17 @@
+auth:
+  environment: development
+  session:
+    secret: ${BACKSTAGE_AUTH_SESSION_SECRET}
+  providers:
+    oidc:
+      development:
+        metadataUrl: http://localhost:18083/realms/platform/.well-known/openid-configuration
+        clientId: backstage
+        clientSecret: ${BACKSTAGE_OIDC_CLIENT_SECRET}
+        prompt: login
+        signIn:
+          resolvers:
+            - resolver: emailLocalPartMatchingUserEntityName
+
+chapter08:
+  agentRuntimeUrl: http://localhost:18080

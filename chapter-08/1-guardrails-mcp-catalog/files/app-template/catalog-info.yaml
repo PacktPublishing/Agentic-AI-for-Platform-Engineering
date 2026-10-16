@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: APP_NAME
+  description: APP_DESCRIPTION
+  annotations:
+    backstage.io/kubernetes-id: APP_NAME
+    backstage.io/kubernetes-namespace: APP_NAMESPACE
+    github.com/project-slug: GITHUB_USERNAME/REPOSITORY_NAME
+    platform.example.com/manifest-path: APP_NAME/k8s/deployment.yaml
+    platform.example.com/workload-name: APP_NAME
+    platform.example.com/environment: ENVIRONMENT
+    platform.example.com/tenant: TENANT_ID
+    platform.example.com/namespace-scope: dedicated
+spec:
+  type: website
+  lifecycle: experimental
+  owner: APP_OWNER

@@ -1,5 +1,8 @@
 # Chapter 05: Building an AI-Powered Backstage Platform
 
+> [!WARNING]
+> **For learning and experimentation only.** These labs are reference implementations and are not production-ready baselines. Do not deploy them to production without an independent security review, infrastructure hardening, and testing appropriate to your workloads and compliance requirements. The credentials, IAM permissions, network boundaries, policies, and deployment configurations are intentionally simplified for local exercises.
+
 This chapter walks through setting up a Backstage internal developer portal and progressively enhancing it with an AI chat assistant, catalog awareness, and Kubernetes integration — all in four incremental labs.
 
 ## Labs

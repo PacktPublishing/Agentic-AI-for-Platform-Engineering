@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opa-policy-engine
+  namespace: agent-platform
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: opa-policy-engine
+  template:
+    metadata:
+      labels:
+        app: opa-policy-engine
+      annotations:
+        chapter08/policy-hash: REPLACE_WITH_POLICY_HASH
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: opa-policy-engine
+        image: openpolicyagent/opa:1.4.2-static
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8181
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        args:
+        - run
+        - --server
+        - --addr=0.0.0.0:8181
+        - --authorization=basic
+        - /policies/roles.yaml
+        - /policies/agent-tool-validation.rego
+        - /policies/tenant-isolation.rego
+        - /policies/system-authz.rego
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8181
+        volumeMounts:
+        - name: policies
+          mountPath: /policies
+          readOnly: true
+      volumes:
+      - name: policies
+        configMap:
+          name: agent-policies

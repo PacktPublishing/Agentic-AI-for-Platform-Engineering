@@ -10,9 +10,9 @@ Build from the lab source. Use `linux/arm64` for Apple Silicon or `linux/amd64` 
 
 ```bash
 export KIND_PLATFORM=linux/arm64
-docker build --platform "$KIND_PLATFORM" -t agent-runtime:0.1.0 \
+docker build --platform "$KIND_PLATFORM" -t agent-runtime:0.7.1 \
   "$BOOK_REPO/chapter-07/1-strands-runtime/files/agent/"
-docker image save --platform "$KIND_PLATFORM" -o /tmp/agent-runtime.tar agent-runtime:0.1.0
+docker image save --platform "$KIND_PLATFORM" -o /tmp/agent-runtime.tar agent-runtime:0.7.1
 kind load image-archive /tmp/agent-runtime.tar --name agentic-platform
 rm /tmp/agent-runtime.tar
 ```
